@@ -4,10 +4,23 @@
  */
 package com.bookstore.mapper;
 
+import com.bookstore.exception.BookNotFoundException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.ext.Provider;
+
 /**
  *
  * @author ADMIN
  */
-public class BookNotFoundMapper {
-    
+@Provider
+public class BookNotFoundExceptionMapper implements ExceptionMapper<BookNotFoundException> {
+    @Override
+    public Response toResponse(BookNotFoundException ex) {
+        return Response.status(Response.Status.NOT_FOUND)
+                       .entity(new ErrorMessage(ex.getMessage()))
+                       .type(MediaType.APPLICATION_JSON)
+                       .build();
+    }
 }
+

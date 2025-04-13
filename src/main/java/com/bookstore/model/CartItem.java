@@ -9,14 +9,21 @@ package com.bookstore.model;
  * @author ADMIN
  */
 public class CartItem {
-    private int id;
-    private String title;
-    private String author;
-    private String isbn;
-    private int publicationYear;
-    private double price;
-    private int stockQuantity;
+    private Book book;
+    private int quantity;
 
-    // Constructors, getters and setters
+
+    public CartItem() {}
+
+    public CartItem(Book book, int quantity) {
+        this.book = book;
+        this.quantity = quantity;
+    }
+
+    public Book getBook() { return book; }
+    public void setBook(Book book) { this.book = book; }
+
+    public int getQuantity() { return quantity; }
+    public void setQuantity(int quantity) { this.quantity = quantity; }
 }
 
