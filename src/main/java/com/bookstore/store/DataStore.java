@@ -12,5 +12,9 @@ public class DataStore {
     public static Map<Integer, Book> books = new HashMap<>();
     public static Map<Integer, Author> authors = new HashMap<>();
     public static Map<Integer, Customer> customers = new HashMap<>();
+
+    public static Order createOrder(int customerId, Order order) { ... }
+    public static List<Order> getOrdersByCustomer(int customerId) { ... }
+    public static Order getOrderById(int customerId, int orderId) { ... }
 }
 

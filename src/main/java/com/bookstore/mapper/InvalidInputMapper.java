@@ -4,10 +4,18 @@
  */
 package com.bookstore.mapper;
 
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.ExceptionMapper;
+
 /**
  *
  * @author ADMIN
  */
-public class InvalidInputMapper {
-    
+
+@Provider
+class InvalidInputMapper implements ExceptionMapper<InvalidInputException> {
+    public Response toResponse(InvalidInputException ex) {
+        return Response.status(Response.Status.BAD_REQUEST)
+                .entity("{\"error\":\"Invalid input\"}").build();
+    }
 }

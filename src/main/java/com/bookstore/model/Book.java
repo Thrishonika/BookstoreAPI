@@ -51,5 +51,19 @@ public class Book {
 
        public int getStockQuantity() { return stockQuantity; }
        public void setStockQuantity(int stockQuantity) { this.stockQuantity = stockQuantity; }
+       
+       @Override
+        public String toString() {
+        return "Book{" +
+            "id=" + id +
+            ", title='" + title + '\'' +
+            ", author='" + author + '\'' +
+            ", isbn='" + isbn + '\'' +
+            ", publicationYear=" + publicationYear +
+            ", price=" + price +
+            ", stockQuantity=" + stockQuantity +
+            '}';
+}
+
 }
 
