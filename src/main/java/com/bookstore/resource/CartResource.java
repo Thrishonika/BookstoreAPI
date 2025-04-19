@@ -1,57 +1,52 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.bookstore.resource;
 
-/**
- *
- * @author ADMIN
- */
-
 import com.bookstore.model.CartItem;
-import com.bookstore.model.Book;
+import com.bookstore.store.DataStore;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
-import java.util.ArrayList;
 import java.util.List;
 
-@Path("/cart")
+@Path("/customers/{customerId}/cart")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class CartResource {
 
-    private final static List<CartItem> cart = new ArrayList<>();
-
+    // Get all items in the cart for a specific customer
     @GET
-    public List<CartItem> getCartItems() {
-        return cart;
+    public List<CartItem> getCartItems(@PathParam("customerId") int customerId) {
+        // You should filter cart items by customerId if needed
+        return DataStore.cart; // Currently returns all cart items
     }
 
+    // Add an item to the cart for a specific customer
     @POST
-    public Response addCartItem(CartItem item) {
-        cart.add(item);
+    public Response addCartItem(@PathParam("customerId") int customerId, CartItem item) {
+        // Add the cart item logic here, maybe associate it with customerId if needed
+        DataStore.cart.add(item);
         return Response.status(Response.Status.CREATED).entity(item).build();
     }
 
+    // Remove an item from the cart for a specific customer
     @DELETE
-    @Path("/{bookId}")
-    public Response removeCartItem(@PathParam("bookId") int bookId) {
-        CartItem item = cart.stream()
+    @Path("/items/{bookId}")
+    public Response removeCartItem(@PathParam("customerId") int customerId, @PathParam("bookId") int bookId) {
+        CartItem item = DataStore.cart.stream()
                 .filter(ci -> ci.getBook().getId() == bookId)
                 .findFirst()
                 .orElseThrow(() -> new NotFoundException("Item not found in cart"));
-        cart.remove(item);
+        DataStore.cart.remove(item);
         return Response.noContent().build();
     }
 
+    // Clear the entire cart for a specific customer (if needed)
     @DELETE
-    public Response clearCart() {
-        cart.clear();
+    public Response clearCart(@PathParam("customerId") int customerId) {
+        DataStore.cart.clear(); // This removes all items from the cart
         return Response.noContent().build();
     }
 }
+
+
 
 

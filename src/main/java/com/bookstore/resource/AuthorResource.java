@@ -10,6 +10,7 @@ package com.bookstore.resource;
  */
 
 import com.bookstore.model.Author;
+import com.bookstore.store.DataStore;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -22,50 +23,55 @@ import java.util.List;
 @Consumes(MediaType.APPLICATION_JSON)
 public class AuthorResource {
 
-    private final static List<Author> authors = new ArrayList<>();
-
     @GET
     public List<Author> getAllAuthors() {
-        return authors;
+        return new ArrayList<>(DataStore.authors.values());
     }
 
     @GET
     @Path("/{id}")
     public Author getAuthorById(@PathParam("id") int id) {
-        return authors.stream()
-                .filter(a -> a.getId() == id)
-                .findFirst()
-                .orElseThrow(() -> new NotFoundException("Author not found"));
+        Author author = DataStore.authors.get(id);
+        if (author == null) {
+            throw new NotFoundException("Author not found");
+        }
+        return author;
     }
 
     @POST
     public Response addAuthor(Author author) {
-        authors.add(author);
+        int id = generateNewId(); // You'll need to implement this method
+        author.setId(id);
+        DataStore.authors.put(id, author);
         return Response.status(Response.Status.CREATED).entity(author).build();
     }
 
     @PUT
     @Path("/{id}")
     public Response updateAuthor(@PathParam("id") int id, Author updatedAuthor) {
-        for (Author a : authors) {
-            if (a.getId() == id) {
-                a.setName(updatedAuthor.getName());
-                a.setBiography(updatedAuthor.getBiography());
-                return Response.ok(a).build();
-            }
+        Author existingAuthor = DataStore.authors.get(id);
+        if (existingAuthor == null) {
+            throw new NotFoundException("Author not found");
         }
-        throw new NotFoundException("Author not found");
+
+        updatedAuthor.setId(id);
+        DataStore.authors.put(id, updatedAuthor);
+        return Response.ok(updatedAuthor).build();
     }
 
     @DELETE
     @Path("/{id}")
     public Response deleteAuthor(@PathParam("id") int id) {
-        Author author = authors.stream()
-                .filter(a -> a.getId() == id)
-                .findFirst()
-                .orElseThrow(() -> new NotFoundException("Author not found"));
-        authors.remove(author);
+        Author removed = DataStore.authors.remove(id);
+        if (removed == null) {
+            throw new NotFoundException("Author not found");
+        }
         return Response.noContent().build();
+    }
+
+    // Dummy ID generator method (for now, you can improve it later)
+    private int generateNewId() {
+        return DataStore.authors.size() + 1;
     }
 }
 

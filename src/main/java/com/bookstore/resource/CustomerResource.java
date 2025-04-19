@@ -4,16 +4,12 @@
  */
 package com.bookstore.resource;
 
-/**
- *
- * @author ADMIN
- */
-
 import com.bookstore.model.Customer;
+import com.bookstore.store.DataStore;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
+import jakarta.ws.rs.NotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,38 +18,38 @@ import java.util.List;
 @Consumes(MediaType.APPLICATION_JSON)
 public class CustomerResource {
 
-    private final static List<Customer> customers = new ArrayList<>();
-
     @GET
     public List<Customer> getAllCustomers() {
-        return customers;
+        return new ArrayList<>(DataStore.customers.values());
     }
 
     @GET
     @Path("/{id}")
     public Customer getCustomerById(@PathParam("id") int id) {
-        return customers.stream()
-                .filter(c -> c.getId() == id)
-                .findFirst()
-                .orElseThrow(() -> new NotFoundException("Customer not found"));
+        Customer customer = DataStore.customers.get(id);
+        if (customer == null) {
+            throw new NotFoundException("Customer not found");
+        }
+        return customer;
     }
 
     @POST
     public Response addCustomer(Customer customer) {
-        customers.add(customer);
+        int id = generateNewId(); // Handle ID generation
+        customer.setId(id);        // Assuming `Customer` has a `setId` method
+        DataStore.customers.put(id, customer);
         return Response.status(Response.Status.CREATED).entity(customer).build();
     }
 
     @PUT
     @Path("/{id}")
     public Response updateCustomer(@PathParam("id") int id, Customer updatedCustomer) {
-        for (Customer c : customers) {
-            if (c.getId() == id) {
-                c.setName(updatedCustomer.getName());
-                c.setEmail(updatedCustomer.getEmail());
-                c.setPassword(updatedCustomer.getPassword());
-                return Response.ok(c).build();
-            }
+        Customer existingCustomer = DataStore.customers.get(id);
+        if (existingCustomer != null) {
+            existingCustomer.setName(updatedCustomer.getName());
+            existingCustomer.setEmail(updatedCustomer.getEmail());
+            existingCustomer.setPassword(updatedCustomer.getPassword());
+            return Response.ok(existingCustomer).build();
         }
         throw new NotFoundException("Customer not found");
     }
@@ -61,13 +57,16 @@ public class CustomerResource {
     @DELETE
     @Path("/{id}")
     public Response deleteCustomer(@PathParam("id") int id) {
-        Customer customer = customers.stream()
-                .filter(c -> c.getId() == id)
-                .findFirst()
-                .orElseThrow(() -> new NotFoundException("Customer not found"));
-        customers.remove(customer);
+        Customer customer = DataStore.customers.remove(id);
+        if (customer == null) {
+            throw new NotFoundException("Customer not found");
+        }
         return Response.noContent().build();
     }
-}
 
+    // Generate a new unique ID (simple logic here)
+    private int generateNewId() {
+        return DataStore.customers.size() + 1; // Just a simple example
+    }
+}
 
