@@ -20,16 +20,16 @@ public class ApplicationConfig extends Application {
 
     @Override
     public Set<Class<?>> getClasses() {
-        Set<Class<?>> classes = new HashSet<>();
-
+        Set<Class<?>> resource = new HashSet<>();
+        
         // Register your REST resource classes here
-        classes.add(BookResource.class);
-        classes.add(AuthorResource.class);
-        classes.add(CustomerResource.class);
-        classes.add(CartResource.class);
-        classes.add(OrderResource.class);
+        resource.add(BookResource.class);
+        resource.add(AuthorResource.class);
+        resource.add(CustomerResource.class);
+        resource.add(CartResource.class);
+        resource.add(OrderResource.class);
 
-        return classes;
+        return resource;
     }
 }
 
