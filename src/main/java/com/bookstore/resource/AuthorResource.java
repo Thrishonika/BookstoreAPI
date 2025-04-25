@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.bookstore.resource;
 
 /**
@@ -11,9 +8,9 @@ package com.bookstore.resource;
 
 import com.bookstore.model.Author;
 import com.bookstore.store.DataStore;
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,5 +71,3 @@ public class AuthorResource {
         return DataStore.authors.size() + 1;
     }
 }
-
-

@@ -1,15 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.bookstore.resource;
 
 import com.bookstore.model.Customer;
 import com.bookstore.store.DataStore;
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.NotFoundException;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.NotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,4 +66,3 @@ public class CustomerResource {
         return DataStore.customers.size() + 1; // Just a simple example
     }
 }
-

@@ -1,10 +1,11 @@
+
 package com.bookstore.resource;
 
 import com.bookstore.model.CartItem;
 import com.bookstore.store.DataStore;
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/customers/{customerId}/cart")
@@ -15,15 +16,13 @@ public class CartResource {
     // Get all items in the cart for a specific customer
     @GET
     public List<CartItem> getCartItems(@PathParam("customerId") int customerId) {
-        // You should filter cart items by customerId if needed
-        return DataStore.cart; // Currently returns all cart items
+        return DataStore.getCart(customerId); // Fetch the cart for the given customer
     }
 
     // Add an item to the cart for a specific customer
     @POST
     public Response addCartItem(@PathParam("customerId") int customerId, CartItem item) {
-        // Add the cart item logic here, maybe associate it with customerId if needed
-        DataStore.cart.add(item);
+        DataStore.addCartItem(customerId, item); // Add the cart item for the given customer
         return Response.status(Response.Status.CREATED).entity(item).build();
     }
 
@@ -31,22 +30,14 @@ public class CartResource {
     @DELETE
     @Path("/items/{bookId}")
     public Response removeCartItem(@PathParam("customerId") int customerId, @PathParam("bookId") int bookId) {
-        CartItem item = DataStore.cart.stream()
-                .filter(ci -> ci.getBook().getId() == bookId)
-                .findFirst()
-                .orElseThrow(() -> new NotFoundException("Item not found in cart"));
-        DataStore.cart.remove(item);
+        DataStore.removeCartItem(customerId, bookId); // Remove the cart item for the given customer
         return Response.noContent().build();
     }
 
     // Clear the entire cart for a specific customer (if needed)
     @DELETE
     public Response clearCart(@PathParam("customerId") int customerId) {
-        DataStore.cart.clear(); // This removes all items from the cart
+        DataStore.clearCart(customerId); // Clear the cart for the given customer
         return Response.noContent().build();
     }
 }
-
-
-
-

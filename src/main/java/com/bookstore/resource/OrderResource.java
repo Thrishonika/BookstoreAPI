@@ -8,9 +8,9 @@ package com.bookstore.resource;
 
 import com.bookstore.model.Order;
 import com.bookstore.store.DataStore;
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.time.LocalDate;
 import java.util.Map;
 
@@ -34,7 +34,7 @@ public class OrderResource {
         return order;
     }
 
-    @POST
+    @POST 
     public Response placeOrder(Order order) {
         int newId = DataStore.orders.size() + 1;  // Generate a new ID based on the current size of the orders Map
         order.setId(newId);
