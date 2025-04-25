@@ -17,10 +17,11 @@ public class BookNotFoundExceptionMapper implements ExceptionMapper<BookNotFound
                 .build();
     }
 
-    // A simple inner class to represent the JSON error message
-    private static class ErrorMessage {
+    public static class ErrorMessage {
         private String error;
         private String message;
+
+        public ErrorMessage() {}  // Required for JSON-B
 
         public ErrorMessage(String error, String message) {
             this.error = error;
@@ -29,6 +30,8 @@ public class BookNotFoundExceptionMapper implements ExceptionMapper<BookNotFound
 
         public String getError() { return error; }
         public String getMessage() { return message; }
+
+        public void setError(String error) { this.error = error; }
+        public void setMessage(String message) { this.message = message; }
     }
 }
-

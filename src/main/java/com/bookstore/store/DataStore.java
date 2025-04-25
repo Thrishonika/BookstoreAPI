@@ -1,4 +1,3 @@
-
 package com.bookstore.store;
 
 import com.bookstore.model.Book;
@@ -11,13 +10,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class DataStore {
-    public static Map<Integer, Book> books = new HashMap<>();
+    public static Map<Integer, Book> books = new ConcurrentHashMap<>();
     public static Map<Integer, Author> authors = new HashMap<>();
     public static Map<Integer, Customer> customers = new HashMap<>();
     public static Map<Integer, List<CartItem>> customerCarts = new HashMap<>();
-
+    
+    
     public static List<CartItem> getCart(int customerId) {
         return customerCarts.getOrDefault(customerId, new ArrayList<>());
     }

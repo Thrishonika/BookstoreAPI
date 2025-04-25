@@ -25,12 +25,12 @@
             <version>8.0</version>
             <scope>provided</scope>
         </dependency>
-
+        
         <!-- Jersey Dependencies -->
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-servlet</artifactId>
-            <version>${jersey.version}</version>
+            <version>2.36</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.inject</groupId>
@@ -45,7 +45,7 @@
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-server</artifactId>
-            <version>${jersey.version}</version>
+            <version>2.36</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
@@ -74,4 +74,3 @@
         </plugins>
     </build>
 </project>
-

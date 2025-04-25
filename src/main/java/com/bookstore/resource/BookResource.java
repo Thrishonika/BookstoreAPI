@@ -1,5 +1,6 @@
 
 package com.bookstore.resource;
+import com.bookstore.exception.BookNotFoundException;
 import com.bookstore.model.Book;
 import com.bookstore.store.DataStore;
 import javax.ws.rs.*;
@@ -30,7 +31,7 @@ public class BookResource {
     public Book getBookById(@PathParam("id") int id) {
         Book book = DataStore.books.get(id);
         if (book == null) {
-            throw new NotFoundException("Book not found");
+            throw new BookNotFoundException("Book not found");
         }
         return book;
     }
@@ -48,7 +49,7 @@ public class BookResource {
     public Response updateBook(@PathParam("id") int id, Book updatedBook) {
         Book existingBook = DataStore.books.get(id);
         if (existingBook == null) {
-            throw new NotFoundException("Book not found");
+            throw new BookNotFoundException("Book not found");
         }
         updatedBook.setId(id);
         DataStore.books.put(id, updatedBook);
@@ -60,10 +61,8 @@ public class BookResource {
     public Response deleteBook(@PathParam("id") int id) {
         Book removed = DataStore.books.remove(id);
         if (removed == null) {
-            throw new NotFoundException("Book not found");
+            throw new BookNotFoundException("Book not found");
         }
         return Response.noContent().build();
     }
 }
-
-

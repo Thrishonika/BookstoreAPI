@@ -19,8 +19,8 @@ public class InvalidInputExceptionMapper implements ExceptionMapper<InvalidInput
 
     // (Inner class ErrorMessage - same as in BookNotFoundExceptionMapper)
     private static class ErrorMessage {
-        private String error;
-        private String message;
+        private final String error;
+        private final String message;
 
         public ErrorMessage(String error, String message) {
             this.error = error;
