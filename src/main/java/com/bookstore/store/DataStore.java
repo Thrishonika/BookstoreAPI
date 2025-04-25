@@ -28,18 +28,32 @@ public class DataStore {
     }
 
     public static void removeCartItem(int customerId, int bookId) {
+    List<CartItem> cart = customerCarts.get(customerId);
+    if (cart != null) {
+        cart.removeIf(ci -> ci.getBook().getId() == bookId);  // Get bookId from the Book object inside CartItem
+    }
+}
+
+    public static boolean updateCartItem(int customerId, int bookId, CartItem updatedItem) {
         List<CartItem> cart = customerCarts.get(customerId);
         if (cart != null) {
-            cart.removeIf(ci -> ci.getBook().getId() == bookId);
+            for (CartItem item : cart) {
+                if (item.getBook().getId() == bookId) {  // Compare bookId from the Book object inside CartItem
+                    item.setQuantity(updatedItem.getQuantity());
+                    return true;
+                }
+            }
         }
+        return false; // item not found
     }
-
     public static void clearCart(int customerId) {
         List<CartItem> cart = customerCarts.get(customerId);
         if (cart != null) {
             cart.clear();
         }
     }
+
+
 
     public static Map<Integer, Order> orders = new HashMap<>();  // Add this line to store orders
 

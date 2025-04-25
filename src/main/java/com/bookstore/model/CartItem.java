@@ -1,33 +1,40 @@
+
 package com.bookstore.model;
 
-/**
- *
- * @author ADMIN
- */
+
 public class CartItem {
     private Book book;
     private int quantity;
 
+    // Default constructor
+    public CartItem() {
+        // You can initialize with default values if needed, or leave it empty
+        this.book = new Book();  // assuming Book has a default constructor
+        this.quantity = 1; // Default quantity
+    }
 
-    public CartItem() {}
-
+    // Constructor with parameters
     public CartItem(Book book, int quantity) {
         this.book = book;
         this.quantity = quantity;
     }
 
-    public Book getBook() { return book; }
-    public void setBook(Book book) { this.book = book; }
+    public Book getBook() {
+        return book;
+    }
 
-    public int getQuantity() { return quantity; }
-    public void setQuantity(int quantity) { this.quantity = quantity; }
-    
-    @Override
-    public String toString() {
-    return "CartItem{" +
-           "book=" + book +
-           ", quantity=" + quantity +
-           '}';
+    public void setBook(Book book) {
+        this.book = book;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 }
 
-}
+
+

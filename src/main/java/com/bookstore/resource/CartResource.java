@@ -21,10 +21,22 @@ public class CartResource {
 
     // Add an item to the cart for a specific customer
     @POST
+    @Path("/items")
     public Response addCartItem(@PathParam("customerId") int customerId, CartItem item) {
         DataStore.addCartItem(customerId, item); // Add the cart item for the given customer
         return Response.status(Response.Status.CREATED).entity(item).build();
     }
+    @PUT
+    @Path("/items/{bookId}")
+    public Response updateCartItem(
+        @PathParam("customerId") int customerId,
+        @PathParam("bookId") int bookId,
+        CartItem updatedItem
+    ) {
+        DataStore.updateCartItem(customerId, bookId, updatedItem);
+        return Response.ok(updatedItem).build();
+    }
+
 
     // Remove an item from the cart for a specific customer
     @DELETE
