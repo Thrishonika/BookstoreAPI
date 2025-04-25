@@ -12,6 +12,15 @@ public class Book {
          private int publicationYear;
          private double price;
          private int stockQuantity;
+        private int authorId; // make sure this exists
+
+        public int getAuthorId() {
+            return authorId;
+        }
+
+        public void setAuthorId(int authorId) {
+            this.authorId = authorId;
+        }
 
 
         // Constructor(s)

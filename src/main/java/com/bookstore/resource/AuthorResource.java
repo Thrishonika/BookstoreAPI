@@ -6,7 +6,9 @@ package com.bookstore.resource;
  * @author ADMIN
  */
 
+import com.bookstore.exception.AuthorNotFoundException;
 import com.bookstore.model.Author;
+import com.bookstore.model.Book;
 import com.bookstore.store.DataStore;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -30,10 +32,29 @@ public class AuthorResource {
     public Author getAuthorById(@PathParam("id") int id) {
         Author author = DataStore.authors.get(id);
         if (author == null) {
-            throw new NotFoundException("Author not found");
+            throw new AuthorNotFoundException("Author not found");
         }
         return author;
     }
+    @GET
+    @Path("/{id}/books")
+    public Response getBooksByAuthorId(@PathParam("id") int id) {
+        Author author = DataStore.authors.get(id);
+        if (author == null) {
+            throw new AuthorNotFoundException("Author not found");
+        }
+
+        // Filter books by authorId
+        List<Book> booksByAuthor = new ArrayList<>();
+        for (Book book : DataStore.books.values()) {
+            if (book.getAuthorId() == id) {
+                booksByAuthor.add(book);
+            }
+        }
+
+    return Response.ok(booksByAuthor).build();
+}
+
 
     @POST
     public Response addAuthor(Author author) {
@@ -48,7 +69,7 @@ public class AuthorResource {
     public Response updateAuthor(@PathParam("id") int id, Author updatedAuthor) {
         Author existingAuthor = DataStore.authors.get(id);
         if (existingAuthor == null) {
-            throw new NotFoundException("Author not found");
+            throw new AuthorNotFoundException("Author not found");
         }
 
         updatedAuthor.setId(id);
@@ -61,7 +82,7 @@ public class AuthorResource {
     public Response deleteAuthor(@PathParam("id") int id) {
         Author removed = DataStore.authors.remove(id);
         if (removed == null) {
-            throw new NotFoundException("Author not found");
+            throw new AuthorNotFoundException("Author not found");
         }
         return Response.noContent().build();
     }

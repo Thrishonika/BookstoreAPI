@@ -1,12 +1,12 @@
 
 package com.bookstore.resource;
 
+import com.bookstore.exception.CustomerNotFoundException;
 import com.bookstore.model.Customer;
 import com.bookstore.store.DataStore;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.NotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class CustomerResource {
     public Customer getCustomerById(@PathParam("id") int id) {
         Customer customer = DataStore.customers.get(id);
         if (customer == null) {
-            throw new NotFoundException("Customer not found");
+            throw new CustomerNotFoundException("Customer not found");
         }
         return customer;
     }
@@ -48,7 +48,7 @@ public class CustomerResource {
             existingCustomer.setPassword(updatedCustomer.getPassword());
             return Response.ok(existingCustomer).build();
         }
-        throw new NotFoundException("Customer not found");
+        throw new CustomerNotFoundException("Customer not found");
     }
 
     @DELETE
@@ -56,7 +56,7 @@ public class CustomerResource {
     public Response deleteCustomer(@PathParam("id") int id) {
         Customer customer = DataStore.customers.remove(id);
         if (customer == null) {
-            throw new NotFoundException("Customer not found");
+            throw new CustomerNotFoundException("Customer not found");
         }
         return Response.noContent().build();
     }

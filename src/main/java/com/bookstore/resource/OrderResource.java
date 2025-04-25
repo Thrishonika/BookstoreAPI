@@ -6,6 +6,7 @@ package com.bookstore.resource;
  * @author ADMIN
  */
 
+import com.bookstore.exception.OutOfStockException;
 import com.bookstore.model.Order;
 import com.bookstore.store.DataStore;
 import javax.ws.rs.*;
@@ -29,7 +30,7 @@ public class OrderResource {
     public Order getOrderById(@PathParam("id") int id) {
         Order order = DataStore.orders.get(id);
         if (order == null) {
-            throw new NotFoundException("Order not found");
+            throw new OutOfStockException("Order not found");
         }
         return order;
     }
@@ -48,7 +49,7 @@ public class OrderResource {
     public Response deleteOrder(@PathParam("id") int id) {
         Order order = DataStore.orders.remove(id);
         if (order == null) {
-            throw new NotFoundException("Order not found");
+            throw new OutOfStockException("Order not found");
         }
         return Response.noContent().build();
     }

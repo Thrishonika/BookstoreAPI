@@ -1,4 +1,3 @@
-
 package com.bookstore.resource;
 import com.bookstore.exception.BookNotFoundException;
 import com.bookstore.model.Book;

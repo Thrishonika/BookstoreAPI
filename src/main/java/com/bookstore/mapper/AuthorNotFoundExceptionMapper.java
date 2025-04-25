@@ -1,4 +1,3 @@
-
 package com.bookstore.mapper;
 
 import com.bookstore.exception.AuthorNotFoundException;
@@ -17,10 +16,11 @@ public class AuthorNotFoundExceptionMapper implements ExceptionMapper<AuthorNotF
                 .build();
     }
 
-    // (Inner class ErrorMessage - same as in BookNotFoundExceptionMapper)
-    private static class ErrorMessage {
-        private final String error;
-        private final String message;
+ public static class ErrorMessage {
+        private String error;
+        private String message;
+
+        public ErrorMessage() {}  // Required for JSON-B
 
         public ErrorMessage(String error, String message) {
             this.error = error;
@@ -29,5 +29,8 @@ public class AuthorNotFoundExceptionMapper implements ExceptionMapper<AuthorNotF
 
         public String getError() { return error; }
         public String getMessage() { return message; }
+
+        public void setError(String error) { this.error = error; }
+        public void setMessage(String message) { this.message = message; }
     }
 }
