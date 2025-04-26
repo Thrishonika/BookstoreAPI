@@ -10,15 +10,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class DataStore {
-    public static Map<Integer, Book> books = new ConcurrentHashMap<>();
+    public static Map<Integer, Book> books = new HashMap<>();
     public static Map<Integer, Author> authors = new HashMap<>();
     public static Map<Integer, Customer> customers = new HashMap<>();
     public static Map<Integer, List<CartItem>> customerCarts = new HashMap<>();
-    
-    
+    public static Map<Integer, Order> orders = new HashMap<>();
+
+    private static AtomicInteger orderIdCounter = new AtomicInteger(1);  // Atomic counter for order IDs
+   
     public static List<CartItem> getCart(int customerId) {
         return customerCarts.getOrDefault(customerId, new ArrayList<>());
     }
@@ -28,24 +30,25 @@ public class DataStore {
     }
 
     public static void removeCartItem(int customerId, int bookId) {
-    List<CartItem> cart = customerCarts.get(customerId);
-    if (cart != null) {
-        cart.removeIf(ci -> ci.getBook().getId() == bookId);  // Get bookId from the Book object inside CartItem
+        List<CartItem> cart = customerCarts.get(customerId);
+        if (cart != null) {
+            cart.removeIf(ci -> ci.getBook().getId() == bookId);
+        }
     }
-}
 
     public static boolean updateCartItem(int customerId, int bookId, CartItem updatedItem) {
         List<CartItem> cart = customerCarts.get(customerId);
         if (cart != null) {
             for (CartItem item : cart) {
-                if (item.getBook().getId() == bookId) {  // Compare bookId from the Book object inside CartItem
+                if (item.getBook().getId() == bookId) {
                     item.setQuantity(updatedItem.getQuantity());
                     return true;
                 }
             }
         }
-        return false; // item not found
+        return false;
     }
+
     public static void clearCart(int customerId) {
         List<CartItem> cart = customerCarts.get(customerId);
         if (cart != null) {
@@ -53,20 +56,16 @@ public class DataStore {
         }
     }
 
-
-
-    public static Map<Integer, Order> orders = new HashMap<>();  // Add this line to store orders
-
-    public static Order createOrder(int customerId, Order order) {
-        // Assuming orders are uniquely identified by their ID
-        int newId = orders.size() + 1;  // Generate a new ID for the order
-        order.setId(newId);  // Set the ID of the order
-        orders.put(newId, order);  // Add the order to the orders map
+    public static Order createOrder(int customerId, List<CartItem> items) {
+        // Generate a new order ID
+        int newId = orderIdCounter.getAndIncrement();
+        double totalPrice = items.stream().mapToDouble(item -> item.getBook().getPrice() * item.getQuantity()).sum();
+        Order order = new Order(newId, customerId, items, totalPrice);
+        orders.put(newId, order);
         return order;
     }
 
     public static List<Order> getOrdersByCustomer(int customerId) {
-        // Return orders based on customer ID
         List<Order> customerOrders = new ArrayList<>();
         for (Order order : orders.values()) {
             if (order.getCustomerId() == customerId) {
@@ -77,7 +76,6 @@ public class DataStore {
     }
 
     public static Order getOrderById(int customerId, int orderId) {
-        // Retrieve a specific order by customer and order ID
         Order order = orders.get(orderId);
         if (order != null && order.getCustomerId() == customerId) {
             return order;

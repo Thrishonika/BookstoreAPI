@@ -1,46 +1,43 @@
 
 package com.bookstore.resource;
 
-/**
- *
- * @author ADMIN
- */
-
 import com.bookstore.exception.OutOfStockException;
 import com.bookstore.model.Order;
+import com.bookstore.model.CartItem;
 import com.bookstore.store.DataStore;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.time.LocalDate;
-import java.util.Map;
+import java.util.List;
 
-@Path("/orders")
+@Path("/customers/{customerId}/orders")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class OrderResource {
 
     @GET
-    public Map<Integer, Order> getAllOrders() {
-        return DataStore.orders; // Return orders from DataStore (Map)
+    public Response getAllOrders() {
+        return Response.ok(DataStore.orders).build();
     }
 
     @GET
     @Path("/{id}")
-    public Order getOrderById(@PathParam("id") int id) {
+    public Response getOrderById(@PathParam("id") int id) {
         Order order = DataStore.orders.get(id);
         if (order == null) {
             throw new OutOfStockException("Order not found");
         }
-        return order;
+        return Response.ok(order).build();
     }
 
-    @POST 
-    public Response placeOrder(Order order) {
-        int newId = DataStore.orders.size() + 1;  // Generate a new ID based on the current size of the orders Map
-        order.setId(newId);
-        order.setOrderDate(LocalDate.now());
-        DataStore.orders.put(newId, order); // Use put to store the order in the Map
+    @POST
+    public Response placeOrder(@PathParam("customerId") int customerId, List<CartItem> cartItems) {
+        if (cartItems == null || cartItems.isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("Cart items cannot be empty").build();
+        }
+        
+        Order order = DataStore.createOrder(customerId, cartItems);
         return Response.status(Response.Status.CREATED).entity(order).build();
     }
 

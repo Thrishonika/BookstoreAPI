@@ -11,7 +11,7 @@ public class OutOfStockExceptionMapper implements ExceptionMapper<OutOfStockExce
 
     @Override
     public Response toResponse(OutOfStockException exception) {
-        return Response.status(Response.Status.BAD_REQUEST) // Or another appropriate status code
+        return Response.status(Response.Status.NOT_FOUND) // Or another appropriate status code
                 .entity(new ErrorMessage("Out of Stock", exception.getMessage()))
                 .type(javax.ws.rs.core.MediaType.APPLICATION_JSON)
                 .build();
