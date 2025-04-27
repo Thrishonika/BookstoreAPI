@@ -1,5 +1,6 @@
 package com.bookstore.store;
 
+import com.bookstore.exception.BookNotFoundException;
 import com.bookstore.model.Book;
 import com.bookstore.model.Author;
 import com.bookstore.model.CartItem;
@@ -64,6 +65,15 @@ public class DataStore {
         orders.put(newId, order);
         return order;
     }
+    public static int getStockForBook(int bookId) {
+        // Logic to get the stock of a book from your book store map
+        Book book = books.get(bookId);
+        if (book == null) {
+            throw new BookNotFoundException("Book with ID " + bookId + " not found.");
+        }
+        return book.getStock();
+    }
+
 
     public static List<Order> getOrdersByCustomer(int customerId) {
         List<Order> customerOrders = new ArrayList<>();

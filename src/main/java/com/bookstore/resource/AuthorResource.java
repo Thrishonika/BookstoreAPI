@@ -7,6 +7,7 @@ package com.bookstore.resource;
  */
 
 import com.bookstore.exception.AuthorNotFoundException;
+import com.bookstore.exception.InvalidInputException;
 import com.bookstore.model.Author;
 import com.bookstore.model.Book;
 import com.bookstore.store.DataStore;
@@ -58,6 +59,7 @@ public class AuthorResource {
 
     @POST
     public Response addAuthor(Author author) {
+        validateAuthor(author);
         int id = generateNewId(); // You'll need to implement this method
         author.setId(id);
         DataStore.authors.put(id, author);
@@ -71,7 +73,7 @@ public class AuthorResource {
         if (existingAuthor == null) {
             throw new AuthorNotFoundException("Author not found");
         }
-
+        validateAuthor(updatedAuthor);
         updatedAuthor.setId(id);
         DataStore.authors.put(id, updatedAuthor);
         return Response.ok(updatedAuthor).build();
@@ -90,5 +92,12 @@ public class AuthorResource {
     // Dummy ID generator method (for now, you can improve it later)
     private int generateNewId() {
         return DataStore.authors.size() + 1;
+    }
+     //  Validation method for Author inputs
+    private void validateAuthor(Author author) {
+        if (author.getName() == null || author.getName().trim().isEmpty()) {
+            throw new InvalidInputException("Author name must not be empty.");
+        }
+        
     }
 }

@@ -1,5 +1,7 @@
 package com.bookstore.resource;
+import com.bookstore.exception.AuthorNotFoundException;
 import com.bookstore.exception.BookNotFoundException;
+import com.bookstore.exception.InvalidInputException;
 import com.bookstore.model.Book;
 import com.bookstore.store.DataStore;
 import javax.ws.rs.*;
@@ -37,6 +39,7 @@ public class BookResource {
 
     @POST
     public Response addBook(Book book) {
+         validateBook(book);
         int id = generateNewId(); // Call the method to generate the ID
         book.setId(id);  // Set the ID of the book
         DataStore.books.put(id, book);  // Add the book to the DataStore
@@ -50,6 +53,7 @@ public class BookResource {
         if (existingBook == null) {
             throw new BookNotFoundException("Book not found");
         }
+        validateBook(updatedBook);
         updatedBook.setId(id);
         DataStore.books.put(id, updatedBook);
         return Response.ok(updatedBook).build();
@@ -64,4 +68,23 @@ public class BookResource {
         }
         return Response.noContent().build();
     }
+    // New method to validate Book input
+    private void validateBook(Book book) {
+        if (book.getTitle() == null || book.getTitle().trim().isEmpty()) {
+            throw new InvalidInputException("Book title must not be empty.");
+        }
+        
+        if (book.getPrice() < 0) {
+            throw new InvalidInputException("Book price must not be negative.");
+        }
+        
+        if (book.getPublicationYear() > java.time.Year.now().getValue()) {
+            throw new InvalidInputException("Publication year cannot be in the future.");
+        }
+         // New validation: Check if the authorId exists
+        if (!DataStore.authors.containsKey(book.getAuthorId())) {
+            throw new AuthorNotFoundException("Book author must exist.");
+        }
+    }
+
 }

@@ -13,6 +13,7 @@ public class Book {
          private double price;
          private int stockQuantity;
         private int authorId; // make sure this exists
+        private int stock;
 
         public int getAuthorId() {
             return authorId;
@@ -33,6 +34,7 @@ public class Book {
            this.publicationYear = year;
            this.price = price;
            this.stockQuantity = stock;
+            this.stock = stock;
        }
 
        // Getters and Setters
@@ -56,6 +58,15 @@ public class Book {
 
        public int getStockQuantity() { return stockQuantity; }
        public void setStockQuantity(int stockQuantity) { this.stockQuantity = stockQuantity; }
+         // Add this getter for stock
+    public int getStock() {
+        return stock;
+    }
+
+    //  (Optional) If you allow updating stock
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
        
        @Override
         public String toString() {
